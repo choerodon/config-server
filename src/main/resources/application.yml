@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          binder:
+            brokers: 127.0.0.1:9092
+            zkNodes: 127.0.0.1:2181
+    config:
+      server:
+        git:
+          searchPaths: '{profile}'
+        bootstrap: false # 已自行装配bean,勿设置为true
+    bus:
+      enabled: true
+  profiles:
+    active: db # db:使用自定义的配置仓库  git: 使用git作为配置仓库
+feign:
+  hystrix:
+    command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 10000
+choerodon:
+  config:
+    server:
+      manager-service: manager-service
+eureka:
+  instance:
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8000/eureka/
+    registryFetchIntervalSeconds: 10
+

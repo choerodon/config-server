@@ -1,0 +1,15 @@
+# maven
+target/
+
+# idea
+.idea/
+*.iml
+/.ignore
+
+
+# eclipse
+.project
+.classpath
+.settings
+
+application-default.yml

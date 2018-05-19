@@ -1,0 +1,12 @@
+server:
+  port: 8010
+spring:
+  application:
+    name: config-server
+management:
+  port: 8011
+  security:
+    enabled: false
+security:
+  basic:
+    enabled: false
