@@ -3,7 +3,7 @@ Choerodon's configuration service, configuration center for unified management o
 
 - Pull configuration rules.
   
-	If the service includes the configuration version when pulling configurations, the corresponding version configuration is pulled; otherwise, the default configuration is pulled.
+	If the service includes the configuration version when pulling configurations, the corresponding version configuration is pulled, otherwise, the default configuration is pulled.
 
 ## Requirements
 - This project based on eureka client. The local executing needs to cooperate with `register-server`, and the online executing needs to cooperate with `go-register-server`.
