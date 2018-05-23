@@ -1,5 +1,5 @@
-# Config-Server
-Choerodon's configuration service, configuration center for unified management of service configuration files. The local service directly applies the configuration of the configuration file without starting the service. The configurations of all services except `manager-service`, `register-server`, and `config-server` are pulled from `config-sever`, and `config-server` obtains configuration from the `manager-service` management service. The configuration of the service needs to import the service configuration into the `manager-service` database through `choerodon-tool-config`.
+# Config Server
+Choerodon's configuration service, configuration center for unified management of service configuration files. The local service directly applies the configuration of the configuration file. All services except `manager-service`, `register-server`, and `config-server` are pulled from `config-sever`, and `config-server` obtain configuration from the `manager-service`. The configuration of the service needs to import the service configuration into the `manager-service` database through `choerodon-tool-config`.
 
 - Pull configuration rules.
   
