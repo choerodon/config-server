@@ -6,7 +6,7 @@ Choerodon's configuration service, configuration center for unified management o
 	If the service includes the configuration version when pulling configurations, the corresponding version configuration is pulled, otherwise, the default configuration is pulled.
 
 ## Requirements
-- This project based on eureka client. The local executing needs to cooperate with `register-server`, and the online executing needs to cooperate with `go-register-server`.
+- This service is an eureka client service. The local executing needs to cooperate with `eureka-server`, and the online executing needs to cooperate with `go-register-server`.
 - The `config-server` obtains the configuration from the `manager-service` management service and needs to start the `manager-service`.
 - The configuration of other services needs to be imported into the `manager-service` database by using `choerodon-tool-config`.
 
