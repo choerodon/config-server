@@ -11,7 +11,7 @@ Choerodon's configuration service, configuration center for unified management o
 - The configuration of other services needs to be imported into the `manager-service` database by using `choerodon-tool-config`.
 
 ## Installation and Getting Started
-- run `register-server`
+- run `eureka-server`
 - switch into the project directory and run `mvn spring-boot:run`
 
 ## Dependencies
