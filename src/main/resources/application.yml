@@ -3,7 +3,6 @@ spring:
     stream:
       default-binder: kafka
       kafka:
-        binder:
           binder:
             brokers: 127.0.0.1:9092
             zkNodes: 127.0.0.1:2181
