@@ -18,7 +18,7 @@ public interface ManagerServiceClient {
      * @param serviceName 应用名
      * @return 配置集
      */
-    @RequestMapping(value = "/v1/configs/{service_name}/configs/default", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/services/{service_name}/configs/default", method = RequestMethod.GET)
     Config getConfig(@PathVariable("service_name") String serviceName);
 
     /**
@@ -27,7 +27,7 @@ public interface ManagerServiceClient {
      * @param configVersion 配置版本
      * @return 配置集
      */
-    @RequestMapping(value = "/v1/configs/{service_name}/configs/{config_version}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/services/{service_name}/configs/{config_version}", method = RequestMethod.GET)
     Config getConfig(@PathVariable("service_name") String serviceName,  @PathVariable("config_version") String configVersion);
 
 }
