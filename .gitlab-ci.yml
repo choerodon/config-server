@@ -30,6 +30,7 @@ maven-test-build:
   only:
     - tags
     - develop
+    - master
     - /^release-.*$/
     - /^hotfix-.*$/
 
@@ -41,6 +42,7 @@ docker-build:
   only:
     - tags
     - develop
+    - master
     - /^release-.*$/
     - /^hotfix-.*$/
 
