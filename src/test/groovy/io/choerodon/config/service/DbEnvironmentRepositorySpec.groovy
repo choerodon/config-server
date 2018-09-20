@@ -49,7 +49,6 @@ class DbEnvironmentRepositorySpec extends Specification {
         def label = 'label'
         def config = new Config()
         config.setConfigVersion("v1")
-        config.setValue(new HashMap<String, Object>())
 
         and: 'mock PullConfigService'
         def exceptionPullConfigService = Mock(PullConfigService) {

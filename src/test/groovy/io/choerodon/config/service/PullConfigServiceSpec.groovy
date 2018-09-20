@@ -17,6 +17,7 @@ class PullConfigServiceSpec extends Specification {
     def '测试 getConfig方法'() {
         given: 'mock feign'
         def config = new Config()
+        config.setValue(new HashMap<String, Object>())
         config.setName("api-gateway")
         def feign = Mock(ManagerServiceClient) {
             getConfig(_, _) >> config
