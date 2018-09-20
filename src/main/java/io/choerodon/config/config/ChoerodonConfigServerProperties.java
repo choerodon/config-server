@@ -8,9 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "choerodon.config.server")
 public class ChoerodonConfigServerProperties {
 
-
     private String managerService = "manager-service";
-
 
     public String getManagerService() {
         return managerService;

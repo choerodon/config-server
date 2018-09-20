@@ -1,18 +1,26 @@
 package io.choerodon.config.config;
 
-import io.choerodon.config.DbEnvironmentRepository;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.codec.Decoder;
+import io.choerodon.config.service.DbEnvironmentRepository;
 import io.choerodon.config.service.PullConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.cloud.config.server.config.ConfigServerHealthIndicator;
 import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.cloud.config.server.environment.*;
+import org.springframework.cloud.netflix.feign.support.ResponseEntityDecoder;
+import org.springframework.cloud.netflix.feign.support.SpringDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +36,6 @@ import java.util.Map;
 @Configuration
 public class CustomEnvironmentRepositoryConfig {
 
-    @Autowired
-    private PullConfigService pullConfigService;
-
     @Value("${spring.application.name:config-server}")
     private String application;
 
@@ -41,7 +46,7 @@ public class CustomEnvironmentRepositoryConfig {
      */
     @Bean
     @ConditionalOnMissingBean(EnvironmentRepository.class)
-    public SearchPathCompositeEnvironmentRepository searchPathCompositeEnvironmentRepository() {
+    public SearchPathCompositeEnvironmentRepository searchPathCompositeEnvironmentRepository(PullConfigService pullConfigService) {
         DbEnvironmentRepository dbEnvironmentRepository = new DbEnvironmentRepository(new ArrayList<>());
         dbEnvironmentRepository.setPullConfigService(pullConfigService);
         return dbEnvironmentRepository;
@@ -67,21 +72,12 @@ public class CustomEnvironmentRepositoryConfig {
     @Profile("git")
     @ConditionalOnMissingBean(EnvironmentRepository.class)
     protected static class DefaultRepositoryConfiguration {
-
-        @Autowired
-        private ConfigurableEnvironment environment;
-
-        @Autowired
-        private ConfigServerProperties configServerProperties;
-
-        protected DefaultRepositoryConfiguration() {
-        }
-
         @Bean
-        public MultipleJGitEnvironmentRepository defaultEnvironmentRepository() {
-            MultipleJGitEnvironmentRepository repository = new MultipleJGitEnvironmentRepository(this.environment);
-            if (this.configServerProperties.getDefaultLabel() != null) {
-                repository.setDefaultLabel(this.configServerProperties.getDefaultLabel());
+        public MultipleJGitEnvironmentRepository defaultEnvironmentRepository(ConfigurableEnvironment environment,
+                                                                              ConfigServerProperties configServerProperties) {
+            MultipleJGitEnvironmentRepository repository = new MultipleJGitEnvironmentRepository(environment);
+            if (configServerProperties.getDefaultLabel() != null) {
+                repository.setDefaultLabel(configServerProperties.getDefaultLabel());
             }
 
             return repository;
@@ -92,12 +88,9 @@ public class CustomEnvironmentRepositoryConfig {
     @Profile("native")
     protected static class NativeRepositoryConfiguration {
 
-        @Autowired
-        private ConfigurableEnvironment environment;
-
         @Bean
-        public NativeEnvironmentRepository nativeEnvironmentRepository() {
-            return new NativeEnvironmentRepository(this.environment);
+        public NativeEnvironmentRepository nativeEnvironmentRepository(ConfigurableEnvironment environment) {
+            return new NativeEnvironmentRepository(environment);
         }
     }
 
@@ -110,17 +103,12 @@ public class CustomEnvironmentRepositoryConfig {
     @Profile("subversion")
     protected static class SvnRepositoryConfiguration {
 
-        @Autowired
-        private ConfigurableEnvironment environment;
-
-        @Autowired
-        private ConfigServerProperties configServerProperties;
-
         @Bean
-        public SvnKitEnvironmentRepository svnKitEnvironmentRepository() {
-            SvnKitEnvironmentRepository repository = new SvnKitEnvironmentRepository(this.environment);
-            if (this.configServerProperties.getDefaultLabel() != null) {
-                repository.setDefaultLabel(this.configServerProperties.getDefaultLabel());
+        public SvnKitEnvironmentRepository svnKitEnvironmentRepository(ConfigurableEnvironment environment,
+                                                                       ConfigServerProperties configServerProperties) {
+            SvnKitEnvironmentRepository repository = new SvnKitEnvironmentRepository(environment);
+            if (configServerProperties.getDefaultLabel() != null) {
+                repository.setDefaultLabel(configServerProperties.getDefaultLabel());
             }
             return repository;
         }
@@ -152,4 +140,17 @@ public class CustomEnvironmentRepositoryConfig {
             return new EnvironmentWatch.Default();
         }
     }
+
+    /**
+     * 配置feign解码忽略不匹配的字段
+     */
+    @Bean
+    public Decoder feignDecoder() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter(objectMapper);
+        ObjectFactory<HttpMessageConverters> objectFactory = () -> new HttpMessageConverters(jacksonConverter);
+        return new ResponseEntityDecoder(new SpringDecoder(objectFactory));
+    }
 }
+
