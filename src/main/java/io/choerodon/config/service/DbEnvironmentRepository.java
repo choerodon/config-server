@@ -1,8 +1,7 @@
-package io.choerodon.config;
+package io.choerodon.config.service;
 
 import io.choerodon.config.config.ChoerodonConfigServerProperties;
 import io.choerodon.config.domain.Config;
-import io.choerodon.config.service.PullConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +74,10 @@ public class DbEnvironmentRepository extends SearchPathCompositeEnvironmentRepos
         } catch (Exception e) {
             if (getCache(application, label) != null) {
                 env = getCache(application, label);
-                LOGGER.warn(info + "获取配置失败，返回上次缓存的配置");
+                LOGGER.warn("获取配置失败，返回上次缓存的配置. info {}", info, e);
             } else {
                 throw e;
             }
-            e.printStackTrace();
         }
         return env;
     }
