@@ -1,5 +1,9 @@
 spring:
   cloud:
+    server:
+     consul:
+      watch:
+        enabled: true
     bus:
       enabled: false
   sleuth:

@@ -12,8 +12,6 @@ public class Config {
 
     private String configVersion;
 
-    private Boolean isDefault;
-
     private Map<String, Object> value;
 
     public String getName() {
@@ -32,14 +30,6 @@ public class Config {
         this.configVersion = configVersion;
     }
 
-    public Boolean getDefault() {
-        return isDefault;
-    }
-
-    public void setDefault(Boolean aDefault) {
-        isDefault = aDefault;
-    }
-
     public Map<String, Object> getValue() {
         return value;
     }
@@ -54,7 +44,6 @@ public class Config {
         return "Config{" +
                 "name='" + name + '\'' +
                 ", configVersion='" + configVersion + '\'' +
-                ", isDefault=" + isDefault +
                 ", value=" + value +
                 '}';
     }
