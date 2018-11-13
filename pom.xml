@@ -13,7 +13,7 @@
     <artifactId>config-server</artifactId>
 
     <properties>
-        <choerodon.starters.version>0.6.0.RELEASE</choerodon.starters.version>
+        <choerodon.starters.version>0.7.0.RELEASE</choerodon.starters.version>
     </properties>
 
     <dependencies>
@@ -45,6 +45,10 @@
             <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-config-monitor</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
@@ -52,22 +56,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-kafka</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-bus</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-bus</artifactId>
-            <version>${choerodon.starters.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-config-monitor</artifactId>
-            <version>${choerodon.starters.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
