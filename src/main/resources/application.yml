@@ -27,6 +27,7 @@ choerodon:
   config:
     server:
       manager-service: manager-service
+      notify-endpoint: /choerodon/config
 eureka:
   instance:
     preferIpAddress: true

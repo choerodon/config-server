@@ -1,7 +1,8 @@
-package io.choerodon.config.service;
+package io.choerodon.config.service.impl;
 
 import io.choerodon.config.domain.Config;
 import io.choerodon.config.feign.ManagerServiceClient;
+import io.choerodon.config.service.PullConfigService;
 import io.choerodon.core.exception.CommonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
