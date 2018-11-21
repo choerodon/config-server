@@ -1,8 +1,9 @@
 package io.choerodon.config.service
 
 import io.choerodon.config.IntegrationTestConfiguration
-import io.choerodon.config.config.ChoerodonConfigServerProperties
+import io.choerodon.config.config.ConfigServerProperties
 import io.choerodon.config.domain.Config
+import io.choerodon.config.service.impl.DbEnvironmentRepository
 import io.choerodon.core.exception.CommonException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -20,7 +21,7 @@ class DbEnvironmentRepositorySpec extends Specification {
     DbEnvironmentRepository environmentRepository
 
     @Autowired
-    private ChoerodonConfigServerProperties configServerProperties
+    private ConfigServerProperties configServerProperties
 
     @Value("\${spring.application.name:config-server}")
     private String applicationName

@@ -3,6 +3,7 @@ package io.choerodon.config.service
 import io.choerodon.config.IntegrationTestConfiguration
 import io.choerodon.config.domain.Config
 import io.choerodon.config.feign.ManagerServiceClient
+import io.choerodon.config.service.impl.PullConfigServiceImpl
 import io.choerodon.core.exception.CommonException
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import

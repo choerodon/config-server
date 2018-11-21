@@ -1,7 +1,8 @@
-package io.choerodon.config.service;
+package io.choerodon.config.service.impl;
 
-import io.choerodon.config.config.ChoerodonConfigServerProperties;
+import io.choerodon.config.config.ConfigServerProperties;
 import io.choerodon.config.domain.Config;
+import io.choerodon.config.service.PullConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class DbEnvironmentRepository extends SearchPathCompositeEnvironmentRepos
     private String applicationName;
 
     @Autowired
-    private ChoerodonConfigServerProperties choerodonConfigServerProperties;
+    private ConfigServerProperties configServerProperties;
 
     private PullConfigService pullConfigService;
 
@@ -49,7 +50,7 @@ public class DbEnvironmentRepository extends SearchPathCompositeEnvironmentRepos
     @Override
     public Locations getLocations(String application, String profile, String label) {
         String[] locations = new String[1];
-        locations[0] = choerodonConfigServerProperties.getManagerService();
+        locations[0] = configServerProperties.getManagerService();
         return new Locations(application, profile, label, null, locations);
     }
 
@@ -58,7 +59,7 @@ public class DbEnvironmentRepository extends SearchPathCompositeEnvironmentRepos
         String[] profiles = new String[1];
         profiles[0] = profile;
         if (applicationName.equals(application)) {
-            return new Environment(choerodonConfigServerProperties.getManagerService(), profiles, label, null, null);
+            return new Environment(configServerProperties.getManagerService(), profiles, label, null, null);
         }
         Environment env;
         String info = label == null ? application : application + "-" + label;
@@ -68,7 +69,7 @@ public class DbEnvironmentRepository extends SearchPathCompositeEnvironmentRepos
             Map<String, Object> configMap = getDefaultConfig(config.getValue());
             PropertySource propertySource = new PropertySource(application + "-" + profile + "-" + label, configMap);
             String version = config.getConfigVersion();
-            env = new Environment(choerodonConfigServerProperties.getManagerService(), profiles, label, version, null);
+            env = new Environment(configServerProperties.getManagerService(), profiles, label, version, null);
             env.add(propertySource);
             setCache(application, label, env);
         } catch (Exception e) {
