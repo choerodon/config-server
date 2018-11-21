@@ -71,4 +71,4 @@ persistence.existingClaim | 绑定的pvc名称
 env.open.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE | 注册服务地址
 env.open.SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS | kafka地址
 env.open.SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES | zookeeper地址
-
+env.open.SKYWALKING_OPTS | skywalking 代理端配置
