@@ -4,16 +4,16 @@ import io.choerodon.config.config.ConfigServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "${spring.cloud.config.monitor.endpoint.path:}/monitor")
@@ -21,14 +21,20 @@ public class PropertyPathController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertyPathController.class);
 
+    private static final String METADATA_CONTEXT_PATH = "CONTEXT-PATH";
+
     private RestTemplate restTemplate;
 
     private ConfigServerProperties properties;
 
+    private DiscoveryClient discoveryClient;
+
     public PropertyPathController(@Qualifier("ribbonRestTemplate") RestTemplate restTemplate,
+                                  DiscoveryClient discoveryClient,
                                   ConfigServerProperties properties) {
         this.restTemplate = restTemplate;
         this.properties = properties;
+        this.discoveryClient = discoveryClient;
     }
 
     @PostMapping
@@ -45,8 +51,19 @@ public class PropertyPathController {
         }
         services.forEach(service -> {
             try {
-                String noticeUri = "http://" + service + properties.getNotifyEndpoint();
-                restTemplate.put(noticeUri, null);
+                List<ServiceInstance> instances = discoveryClient.getInstances(service);
+                if (instances.isEmpty()) {
+                    LOGGER.warn("Notify service: {} refresh config failed, this service is not UP", service);
+                } else {
+                    String contextPath = instances.get(0).getMetadata().get(METADATA_CONTEXT_PATH);
+                    String noticeUri = "http://" + service;
+                    if (!StringUtils.isEmpty(contextPath)) {
+                        noticeUri = noticeUri + contextPath;
+                    }
+                    noticeUri = noticeUri + properties.getNotifyEndpoint();
+                    restTemplate.put(noticeUri, null);
+                }
+
             } catch (Exception e) {
                 LOGGER.warn("Notify service: {} refresh config failed", service, e);
             }
