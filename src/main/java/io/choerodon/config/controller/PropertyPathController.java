@@ -58,7 +58,7 @@ public class PropertyPathController {
                     String contextPath = instances.get(0).getMetadata().get(METADATA_CONTEXT_PATH);
                     String noticeUri = "http://" + service;
                     if (!StringUtils.isEmpty(contextPath)) {
-                        noticeUri = noticeUri + contextPath;
+                        noticeUri = noticeUri + "/" + contextPath;
                     }
                     noticeUri = noticeUri + properties.getNotifyEndpoint();
                     restTemplate.put(noticeUri, null);
