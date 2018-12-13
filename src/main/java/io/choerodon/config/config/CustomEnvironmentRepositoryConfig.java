@@ -3,14 +3,13 @@ package io.choerodon.config.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.codec.Decoder;
-import io.choerodon.config.service.impl.DbEnvironmentRepository;
 import io.choerodon.config.service.PullConfigService;
+import io.choerodon.config.service.impl.DbEnvironmentRepository;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.config.server.config.ConfigServerHealthIndicator;
 import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.cloud.config.server.environment.*;
@@ -154,10 +153,4 @@ public class CustomEnvironmentRepositoryConfig {
         return new ResponseEntityDecoder(new SpringDecoder(objectFactory));
     }
 
-
-    @Bean(name = "ribbonRestTemplate")
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }
