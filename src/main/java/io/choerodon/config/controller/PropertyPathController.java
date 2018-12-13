@@ -3,7 +3,6 @@ package io.choerodon.config.controller;
 import io.choerodon.config.config.ConfigServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.util.StringUtils;
@@ -23,18 +22,20 @@ public class PropertyPathController {
 
     private static final String METADATA_CONTEXT_PATH = "CONTEXT-PATH";
 
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
 
     private ConfigServerProperties properties;
 
     private DiscoveryClient discoveryClient;
 
-    public PropertyPathController(@Qualifier("ribbonRestTemplate") RestTemplate restTemplate,
-                                  DiscoveryClient discoveryClient,
+    public PropertyPathController(DiscoveryClient discoveryClient,
                                   ConfigServerProperties properties) {
-        this.restTemplate = restTemplate;
         this.properties = properties;
         this.discoveryClient = discoveryClient;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @PostMapping
@@ -55,13 +56,15 @@ public class PropertyPathController {
                 if (instances.isEmpty()) {
                     LOGGER.warn("Notify service: {} refresh config failed, this service is not UP", service);
                 } else {
-                    String contextPath = instances.get(0).getMetadata().get(METADATA_CONTEXT_PATH);
-                    String noticeUri = "http://" + service;
-                    if (!StringUtils.isEmpty(contextPath)) {
-                        noticeUri = noticeUri + "/" + contextPath;
-                    }
-                    noticeUri = noticeUri + properties.getNotifyEndpoint();
-                    restTemplate.put(noticeUri, null);
+                    instances.forEach(i -> {
+                        String contextPath = i.getMetadata().get(METADATA_CONTEXT_PATH);
+                        String noticeUri = "http://" + i.getHost() + ":" + i.getPort();
+                        if (!StringUtils.isEmpty(contextPath)) {
+                            noticeUri = noticeUri + "/" + contextPath;
+                        }
+                        noticeUri = noticeUri + properties.getNotifyEndpoint();
+                        restTemplate.put(noticeUri, null);
+                    });
                 }
 
             } catch (Exception e) {
