@@ -22,7 +22,7 @@ public class PropertyPathController {
 
     private static final String METADATA_CONTEXT_PATH = "CONTEXT-PATH";
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
 
     private ConfigServerProperties properties;
 
@@ -32,6 +32,10 @@ public class PropertyPathController {
                                   ConfigServerProperties properties) {
         this.properties = properties;
         this.discoveryClient = discoveryClient;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @PostMapping

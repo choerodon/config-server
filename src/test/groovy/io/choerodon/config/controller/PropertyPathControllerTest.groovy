@@ -23,7 +23,8 @@ class PropertyPathControllerTest extends Specification {
             getInstances(_) >> [serviceInstance]
         }
 
-        def controller = new PropertyPathController(restTemplate, discoveryClient, properties)
+        def controller = new PropertyPathController(discoveryClient, properties)
+        controller.setRestTemplate(restTemplate)
 
         and:
         def map = new LinkedHashMap()
