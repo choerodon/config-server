@@ -13,7 +13,7 @@
     <artifactId>config-server</artifactId>
 
     <properties>
-        <choerodon.starters.version>0.7.0.RELEASE</choerodon.starters.version>
+        <choerodon.starters.version>0.9.0.RELEASE</choerodon.starters.version>
     </properties>
 
     <dependencies>
