@@ -6,15 +6,16 @@ import feign.codec.Decoder;
 import io.choerodon.config.service.PullConfigService;
 import io.choerodon.config.service.impl.DbEnvironmentRepository;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.config.server.config.ConfigServerHealthIndicator;
 import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.cloud.config.server.environment.*;
-import org.springframework.cloud.netflix.feign.support.ResponseEntityDecoder;
-import org.springframework.cloud.netflix.feign.support.SpringDecoder;
+import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -74,8 +75,9 @@ public class CustomEnvironmentRepositoryConfig {
     protected static class DefaultRepositoryConfiguration {
         @Bean
         public MultipleJGitEnvironmentRepository defaultEnvironmentRepository(ConfigurableEnvironment environment,
-                                                                              ConfigServerProperties configServerProperties) {
-            MultipleJGitEnvironmentRepository repository = new MultipleJGitEnvironmentRepository(environment);
+                                                                              ConfigServerProperties configServerProperties,
+                                                                              MultipleJGitEnvironmentProperties properties) {
+            MultipleJGitEnvironmentRepository repository = new MultipleJGitEnvironmentRepository(environment, properties);
             if (configServerProperties.getDefaultLabel() != null) {
                 repository.setDefaultLabel(configServerProperties.getDefaultLabel());
             }
@@ -89,8 +91,8 @@ public class CustomEnvironmentRepositoryConfig {
     protected static class NativeRepositoryConfiguration {
 
         @Bean
-        public NativeEnvironmentRepository nativeEnvironmentRepository(ConfigurableEnvironment environment) {
-            return new NativeEnvironmentRepository(environment);
+        public NativeEnvironmentRepository nativeEnvironmentRepository(ConfigurableEnvironment environment, NativeEnvironmentProperties properties) {
+            return new NativeEnvironmentRepository(environment, properties);
         }
     }
 
@@ -105,8 +107,9 @@ public class CustomEnvironmentRepositoryConfig {
 
         @Bean
         public SvnKitEnvironmentRepository svnKitEnvironmentRepository(ConfigurableEnvironment environment,
-                                                                       ConfigServerProperties configServerProperties) {
-            SvnKitEnvironmentRepository repository = new SvnKitEnvironmentRepository(environment);
+                                                                       ConfigServerProperties configServerProperties,
+                                                                       SvnKitEnvironmentProperties properties) {
+            SvnKitEnvironmentRepository repository = new SvnKitEnvironmentRepository(environment, properties);
             if (configServerProperties.getDefaultLabel() != null) {
                 repository.setDefaultLabel(configServerProperties.getDefaultLabel());
             }
@@ -118,8 +121,8 @@ public class CustomEnvironmentRepositoryConfig {
     @Profile("vault")
     protected static class VaultConfiguration {
         @Bean
-        public VaultEnvironmentRepository vaultEnvironmentRepository(HttpServletRequest request, EnvironmentWatch watch) {
-            return new VaultEnvironmentRepository(request, watch, new RestTemplate());
+        public VaultEnvironmentRepository vaultEnvironmentRepository(ObjectProvider<HttpServletRequest> request, EnvironmentWatch watch, VaultEnvironmentProperties properties) {
+            return new VaultEnvironmentRepository(request, watch, new RestTemplate(), properties);
         }
     }
 
