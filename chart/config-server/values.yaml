@@ -28,7 +28,7 @@ service:
   port: 8010
 
 metrics:
-  path: /prometheus
+  path: /actuator/prometheus
   label: spring-boot
 
 logs:
