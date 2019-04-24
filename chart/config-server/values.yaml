@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: registry.cn-hangzhou.aliyuncs.com/choerodon-framework/config-server
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 deployment:
   managementPort: 8011
