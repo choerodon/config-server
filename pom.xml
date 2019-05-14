@@ -15,6 +15,7 @@
     <properties>
         <choerodon.starters.version>0.11.0.RELEASE</choerodon.starters.version>
         <choerodon.mainClass>io.choerodon.config.ConfigServerApplication</choerodon.mainClass>
+        <choerodon.serviceBuild>true</choerodon.serviceBuild>
     </properties>
 
     <dependencies>
