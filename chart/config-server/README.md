@@ -65,7 +65,7 @@ choerodon.io/metrics-path: {{ .Values.metrics.path | quote }}
 
 参数名 | 含义 
 --- |  --- 
-service.enable | 是否创建service
+service.enabled | 是否创建service
 persistence.enabled | 是否启用持久化存储
 persistence.existingClaim | 绑定的pvc名称
 env.open.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE | 注册服务地址
